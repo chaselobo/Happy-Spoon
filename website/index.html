@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Spoon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,400..900&display=swap">
+<style>
+/* Layout: loud stacked color bands. Every section drips into the next like the tub label; thick ink outlines + hard offset shadows. */
+:root {
+  --sun: #FFE45C;
+  --ink: #1B1512;
+  --paper: #F4EDE4;
+  --burst: #FF4F2E;
+  --pink: #FF5FA2;
+  --cream: #FFF1DC;
+  --choc: #6B3A22;
+  --mint: #7CF0C5;
+  --fudge: #3B2016;
+  --caramel: #F2A93B;
+  --toffee: #3A1F0B;
+  --cookie: #1F1D24;
+  --cookie-cream: #F4F1E8;
+  --spot-body: #6B3A22;
+  --display: 'Anton', Impact, 'Arial Narrow Bold', sans-serif;
+  --body: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --gutter: clamp(16px, 4vw, 48px);
+  --shadow: 7px 7px 0 var(--ink);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--sun); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5; overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; text-transform: uppercase; margin: 0; line-height: .9; text-wrap: balance; letter-spacing: .005em; }
+p { margin: 0; }
+.wrap { max-width: 1240px; margin-inline: auto; padding-inline: var(--gutter); }
+.label { font-family: var(--body); font-stretch: 125%; font-weight: 800; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+:focus-visible { outline: 3px dashed currentColor; outline-offset: 4px; }
+
+/* ---------- ticker ---------- */
+.ticker { background: var(--ink); color: var(--sun); overflow: hidden; white-space: nowrap; padding-block: 9px; }
+.ticker__track { display: inline-flex; align-items: center; gap: 26px; padding-right: 26px; animation: scroll 38s linear infinite; font-family: var(--display); font-size: 15px; letter-spacing: .12em; }
+.ticker__track svg { width: 14px; height: 14px; flex: none; }
+@keyframes scroll { to { transform: translateX(-50%); } }
+
+/* ---------- nav ---------- */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--sun); border-bottom: 3px solid var(--ink); }
+.nav__row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.logo { display: flex; align-items: center; gap: 9px; text-decoration: none; font-family: var(--display); font-size: 26px; letter-spacing: .06em; }
+.logo svg { width: 18px; height: 32px; }
+.nav__links { display: flex; gap: 28px; }
+.nav__links a { text-decoration: none; font-weight: 800; font-stretch: 112%; font-size: 15px; text-transform: uppercase; letter-spacing: .06em; }
+.nav__links a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 5px; }
+
+.btn { --b: var(--ink); --f: var(--sun); display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 22px; border: 3px solid var(--ink); border-radius: 999px; background: var(--b); color: var(--f); font-family: var(--body); font-stretch: 115%; font-weight: 900; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; box-shadow: 4px 4px 0 var(--ink); transition: transform .12s, box-shadow .12s; }
+.btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--ink); }
+.btn--ghost { --b: transparent; --f: var(--ink); }
+.btn--burst { --b: var(--burst); --f: var(--ink); }
+.cart-count { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding-inline: 6px; border-radius: 999px; background: var(--burst); color: var(--ink); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+/* ---------- hero ---------- */
+.hero { padding-block: clamp(40px, 7vw, 88px) clamp(56px, 8vw, 110px); }
+.hero__grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(32px, 5vw, 64px); align-items: center; }
+.sticker { display: inline-block; padding: 7px 14px; background: var(--ink); color: var(--sun); border-radius: 999px; transform: rotate(-3deg); }
+.hero h1 { margin-top: 22px; font-size: clamp(66px, 10.5vw, 158px); line-height: .92; }
+.hero h1 .tape { display: inline-block; margin-top: 10px; padding: .02em .16em .06em; background: var(--pink); border: 4px solid var(--ink); box-shadow: var(--shadow); transform: rotate(-4deg); }
+.hero__copy { max-width: 32em; margin-top: 30px; font-size: clamp(17px, 1.6vw, 20px); font-weight: 500; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+
+.fan { position: relative; width: 100%; aspect-ratio: 1 / 1.02; }
+.fan__card { position: absolute; width: 47%; padding: 0; border: 3px solid var(--ink); border-radius: 20px; overflow: hidden; background: var(--paper); box-shadow: var(--shadow); cursor: pointer; transition: transform .25s cubic-bezier(.3,1.6,.5,1); }
+.fan__card img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.fan__card:nth-child(1) { left: 0; top: 2%; transform: rotate(-6deg); z-index: 1; }
+.fan__card:nth-child(2) { left: 51%; top: 0; transform: rotate(4deg); z-index: 2; }
+.fan__card:nth-child(3) { left: 3%; top: 51%; transform: rotate(3deg); z-index: 3; }
+.fan__card:nth-child(4) { left: 52%; top: 49%; transform: rotate(-5deg); z-index: 4; }
+.fan__card:hover, .fan__card:focus-visible { transform: rotate(0deg) translateY(-14px) scale(1.04); z-index: 6; }
+.burst { position: absolute; display: grid; place-items: center; color: var(--ink); text-align: center; line-height: .9; }
+.burst svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.burst span { position: relative; font-family: var(--display); }
+.burst small { display: block; font-family: var(--body); font-stretch: 115%; font-weight: 900; letter-spacing: .08em; }
+.fan .burst { width: 25%; aspect-ratio: 1; left: 38%; top: 38%; z-index: 5; transform: rotate(-12deg); pointer-events: none; }
+.fan .burst span { font-size: clamp(26px, 3.6vw, 48px); }
+.fan .burst small { font-size: clamp(9px, .9vw, 12px); margin-top: 4px; }
+
+/* ---------- tape marquee ---------- */
+.tape-strip { position: relative; z-index: 3; margin-block: -26px; background: var(--pink); border-block: 4px solid var(--ink); transform: rotate(-1.6deg); overflow: hidden; white-space: nowrap; padding-block: 12px; }
+.tape-strip .ticker__track { font-size: clamp(22px, 3vw, 34px); color: var(--ink); animation-duration: 30s; animation-direction: reverse; }
+.tape-strip .ticker__track svg { width: 22px; height: 22px; }
+
+/* ---------- drips ---------- */
+.dripped { position: relative; }
+.drip { position: absolute; left: 0; top: -1px; width: 100%; height: var(--dh, 96px); display: block; pointer-events: none; }
+
+/* ---------- spotlight ---------- */
+.spot { --body-c: var(--choc); --drip-c: var(--cream); --text-c: var(--cream); background: var(--body-c); color: var(--text-c); padding-block: 150px 96px; transition: background-color .45s, color .45s; }
+.spot .drip { color: var(--drip-c); transition: color .45s; }
+.spot__grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.spot__photo { border: 4px solid var(--ink); border-radius: 28px; overflow: hidden; background: var(--paper); box-shadow: 12px 12px 0 var(--drip-c); transform: rotate(-2.5deg); transition: box-shadow .45s; }
+.spot__photo img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.tabs { display: flex; flex-wrap: wrap; gap: 10px; }
+.tab { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px 8px 10px; border: 3px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font-family: var(--body); font-stretch: 112%; font-weight: 800; font-size: 14px; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; }
+.tab i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--ink); background: linear-gradient(180deg, var(--d) 0 45%, var(--b) 45% 100%); }
+.tab[aria-selected="true"] { background: var(--text-c); color: var(--body-c); }
+.spot h2 { margin-top: 26px; font-size: clamp(68px, 10vw, 150px); line-height: .86; }
+.spot__flavor { margin-top: 14px; }
+.spot__desc { max-width: 34em; margin-top: 18px; font-size: 19px; font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.chip { padding: 6px 13px; border: 2.5px solid currentColor; border-radius: 999px; }
+.buy { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 32px; padding-top: 26px; border-top: 3px solid currentColor; }
+.price { font-family: var(--display); font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums; }
+.price small { display: block; margin-top: 6px; font-family: var(--body); font-size: 12px; }
+.qty { display: inline-flex; align-items: center; border: 3px solid currentColor; border-radius: 999px; overflow: hidden; }
+.qty button { width: 44px; height: 44px; border: 0; background: transparent; color: inherit; font-size: 22px; font-weight: 900; cursor: pointer; }
+.qty output { min-width: 32px; text-align: center; font-weight: 900; font-size: 18px; font-variant-numeric: tabular-nums; }
+
+/* ---------- lineup ---------- */
+.lineup { background: var(--paper); padding-block: 150px 100px; }
+.lineup .drip { color: var(--spot-body); transition: color .45s; }
+.section-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 32px; margin-bottom: 44px; }
+.section-head h2 { font-size: clamp(52px, 7vw, 104px); }
+.section-head p { max-width: 26em; font-weight: 500; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px; }
+.card { display: flex; flex-direction: column; border: 3px solid var(--ink); border-radius: 22px; overflow: hidden; background: var(--b); color: var(--t); box-shadow: var(--shadow); transition: transform .2s; }
+.card:hover { transform: translateY(-6px) rotate(-1deg); }
+.card__img { background: var(--paper); border-bottom: 3px solid var(--ink); }
+.card__img img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.card__body { position: relative; flex: 1; display: flex; flex-direction: column; gap: 8px; padding: 58px 20px 20px; }
+.card__body .drip { --dh: 44px; color: var(--d); }
+.card h3 { font-size: 36px; line-height: .92; }
+.card__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 14px; }
+.card__price { font-family: var(--display); font-size: 30px; font-variant-numeric: tabular-nums; }
+.card .btn { min-height: 44px; padding: 8px 16px; font-size: 13px; }
+
+/* ---------- macros ---------- */
+.macros { background: var(--sun); padding-block: 150px 110px; }
+.macros .drip { color: var(--paper); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-bottom: 72px; }
+.stat { display: flex; flex-direction: column; gap: 18px; }
+.stat b { font-family: var(--display); font-weight: 400; font-size: clamp(88px, 13vw, 190px); line-height: 1; text-shadow: 7px 7px 0 var(--pink); }
+.stat:nth-child(2) b { text-shadow: 7px 7px 0 var(--mint); }
+.stat:nth-child(3) b { text-shadow: 7px 7px 0 var(--caramel); }
+.macros__grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+.facts { background: #FFFFFF; color: var(--ink); border: 3px solid var(--ink); padding: 14px 16px 16px; box-shadow: var(--shadow); transform: rotate(-1.5deg); max-width: 420px; }
+.facts h3 { font-size: 54px; line-height: .95; border-bottom: 10px solid var(--ink); padding-bottom: 6px; }
+.facts__row { display: flex; justify-content: space-between; gap: 12px; padding-block: 7px; border-bottom: 1.5px solid var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.facts__row strong { font-weight: 900; }
+.facts__row--thick { border-bottom-width: 6px; }
+.facts__row--big { font-size: 24px; font-weight: 900; }
+.facts__note { margin-top: 10px; font-size: 12px; font-weight: 600; }
+.how h2 { font-size: clamp(48px, 6.4vw, 92px); margin-bottom: 30px; }
+.how__list { display: grid; gap: 20px; }
+.how__item { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 18px; align-items: center; padding: 18px 22px; border: 3px solid var(--ink); border-radius: 20px; background: var(--b); color: var(--t); box-shadow: var(--shadow); }
+.how__item:nth-child(1) { transform: rotate(-1deg); }
+.how__item:nth-child(2) { transform: rotate(.8deg); margin-left: clamp(0px, 3vw, 36px); }
+.how__item:nth-child(3) { transform: rotate(-.6deg); }
+.how__item svg { width: 76px; height: 76px; }
+.how__item h3 { font-size: 30px; margin-bottom: 4px; }
+.how__item p { font-weight: 500; }
+
+/* ---------- club ---------- */
+.club { background: var(--pink); padding-block: 150px 120px; }
+.club .drip { color: var(--sun); }
+.club__box { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: end; }
+.club h2 { font-size: clamp(56px, 8.4vw, 124px); }
+.club p { margin-top: 18px; max-width: 28em; font-size: 19px; font-weight: 500; }
+.signup { display: flex; flex-direction: column; gap: 10px; }
+.signup__row { display: flex; gap: 10px; flex-wrap: wrap; }
+.signup input { flex: 1 1 220px; min-width: 0; min-height: 56px; padding: 12px 22px; border: 3px solid var(--ink); border-radius: 999px; background: #FFFFFF; color: var(--ink); font: 600 17px var(--body); box-shadow: 4px 4px 0 var(--ink); }
+.signup input::placeholder { color: #6A5E57; }
+.signup .btn { min-height: 56px; }
+.signup__msg { min-height: 1.5em; font-weight: 800; }
+
+/* ---------- footer ---------- */
+.foot { background: var(--ink); color: var(--cream); padding-block: 150px 36px; }
+.foot .drip { color: var(--pink); }
+.foot__cols { display: grid; grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)); gap: 32px; }
+.foot__cols h4 { margin: 0 0 12px; color: var(--sun); }
+.foot__cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.foot__cols a { text-decoration: none; font-weight: 600; }
+.foot__cols a:hover { text-decoration: underline; }
+.foot__tag { font-family: var(--display); font-size: 34px; line-height: 1; text-transform: uppercase; }
+.wordmark { display: flex; align-items: flex-end; gap: clamp(8px, 1.4vw, 20px); margin-top: 64px; font-family: var(--display); font-size: clamp(60px, 16.4vw, 236px); line-height: .8; white-space: nowrap; color: var(--sun); }
+.wordmark svg { width: .3em; height: .54em; flex: none; margin-bottom: .04em; }
+.foot__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 28px; padding-top: 18px; border-top: 2px solid rgba(255, 241, 220, .25); font-size: 13px; font-weight: 600; }
+
+/* ---------- toast ---------- */
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 50; max-width: calc(100% - 32px); padding: 12px 20px; border: 3px solid var(--ink); border-radius: 999px; background: var(--sun); color: var(--ink); font-weight: 800; box-shadow: var(--shadow); transform: translate(-50%, 160%); transition: transform .3s cubic-bezier(.3,1.5,.5,1); }
+.toast.is-on { transform: translate(-50%, 0); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1020px) {
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .foot__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .nav__links { display: none; }
+  .hero__grid, .spot__grid, .macros__grid, .club__box { grid-template-columns: minmax(0, 1fr); }
+  .fan { max-width: 560px; margin-inline: auto; }
+  .stats { grid-template-columns: minmax(0, 1fr); gap: 36px; margin-bottom: 56px; }
+  .spot__photo { max-width: 460px; }
+}
+@media (max-width: 520px) {
+  .cards { grid-template-columns: minmax(0, 1fr); }
+  .foot__cols { grid-template-columns: minmax(0, 1fr); }
+  .how__item { grid-template-columns: 56px minmax(0, 1fr); padding: 16px; }
+  .how__item svg { width: 56px; height: 56px; }
+  .how__item:nth-child(2) { margin-left: 0; }
+  .logo { font-size: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ticker__track { animation: none; }
+  *, *::before, *::after { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <span>20g protein</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>0g added sugar</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Tastes like cheating. Isn't.</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Free shipping on 4+ tubs</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg>
+    <span>20g protein</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>0g added sugar</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Tastes like cheating. Isn't.</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Free shipping on 4+ tubs</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position: absolute" aria-hidden="true">
+  <defs>
+    <polygon id="burst-shape" fill="currentColor" points="100,50 90.21,58 96.19,69.13 84.09,72.78 85.36,85.36 72.78,84.09 69.13,96.19 58,90.21 50,100 42,90.21 30.87,96.19 27.22,84.09 14.64,85.36 15.91,72.78 3.81,69.13 9.79,58 0,50 9.79,42 3.81,30.87 15.91,27.22 14.64,14.64 27.22,15.91 30.87,3.81 42,9.79 50,0 58,9.79 69.13,3.81 72.78,15.91 85.36,14.64 84.09,27.22 96.19,30.87 90.21,42"></polygon>
+  </defs>
+</svg>
+
+<header class="nav">
+  <div class="wrap nav__row">
+    <a class="logo" href="#top" aria-label="Happy Spoon home">
+      <svg viewBox="0 0 40 72" aria-hidden="true"><ellipse cx="20" cy="20" rx="17" ry="19" fill="#1B1512"></ellipse><rect x="16" y="34" width="8" height="37" rx="4" fill="#1B1512"></rect><ellipse cx="14" cy="17" rx="2.8" ry="3.8" fill="#FFE45C"></ellipse><ellipse cx="26" cy="17" rx="2.8" ry="3.8" fill="#FFE45C"></ellipse><path d="M11 24 Q20 35 29 24 Q20 28 11 24 Z" fill="#FFE45C"></path></svg>
+      Happy Spoon
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="#shop">Shop</a>
+      <a href="#flavors">Flavors</a>
+      <a href="#macros">The macros</a>
+      <a href="#club">Club</a>
+    </nav>
+    <button class="btn" type="button" id="cartBtn">Cart <span class="cart-count" id="cartCount">0</span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div>
+      <span class="sticker label">New · Protein yogurt</span>
+      <h1>Tastes like<br>cheating.<br><span class="tape">Isn't.</span></h1>
+      <p class="hero__copy">Protein yogurt in four flavors that belong in the dessert aisle. 20 grams of protein, zero added sugar, and not one sad spoonful.</p>
+      <div class="hero__cta">
+        <a class="btn btn--burst" href="#shop">Shop the lineup</a>
+        <a class="btn btn--ghost" href="#macros">What's inside</a>
+      </div>
+    </div>
+    <div class="fan">
+      <button class="fan__card" type="button" data-pick="cocoa" aria-label="See Cocoa Loco"><img src="images/cocoa-loco.jpg" alt="Cocoa Loco chocolate protein yogurt tub"></button>
+      <button class="fan__card" type="button" data-pick="mint" aria-label="See Mint Condition"><img src="images/mint-condition.jpg" alt="Mint Condition mint chocolate chip protein yogurt tub"></button>
+      <button class="fan__card" type="button" data-pick="cara" aria-label="See Cara Meltdown"><img src="images/cara-meltdown.jpg" alt="Cara Meltdown salted caramel protein yogurt tub"></button>
+      <button class="fan__card" type="button" data-pick="cookie" aria-label="See Tough Cookie"><img src="images/tough-cookie.jpg" alt="Tough Cookie cookies and cream protein yogurt tub"></button>
+      <div class="burst" style="color: var(--burst)" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span style="color: var(--ink)">20g<small>protein</small></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="tape-strip" aria-hidden="true">
+  <div class="ticker__track">
+    <span>Cocoa Loco</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Mint Condition</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Cara Meltdown</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Tough Cookie</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg>
+    <span>Cocoa Loco</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Mint Condition</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Cara Meltdown</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg><span>Tough Cookie</span><svg viewBox="0 0 100 100"><use href="#burst-shape"></use></svg>
+  </div>
+</div>
+
+<section class="spot dripped" id="shop" aria-labelledby="spotName">
+  <svg class="drip" data-seed="7" viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+  <div class="wrap spot__grid">
+    <div class="spot__photo"><img id="spotImg" src="images/cocoa-loco.jpg" alt="Cocoa Loco chocolate protein yogurt tub"></div>
+    <div>
+      <div class="tabs" role="tablist" aria-label="Pick a flavor">
+        <button class="tab" type="button" role="tab" data-pick="cocoa" aria-selected="true"><i style="--b: #6B3A22; --d: #FFF1DC"></i>Cocoa Loco</button>
+        <button class="tab" type="button" role="tab" data-pick="mint" aria-selected="false"><i style="--b: #7CF0C5; --d: #3B2016"></i>Mint Condition</button>
+        <button class="tab" type="button" role="tab" data-pick="cara" aria-selected="false"><i style="--b: #F2A93B; --d: #FF5FA2"></i>Cara Meltdown</button>
+        <button class="tab" type="button" role="tab" data-pick="cookie" aria-selected="false"><i style="--b: #F4F1E8; --d: #1F1D24"></i>Tough Cookie</button>
+      </div>
+      <h2 id="spotName">Cocoa<br>Loco</h2>
+      <p class="spot__flavor label" id="spotFlavor">Chocolate protein yogurt</p>
+      <p class="spot__desc" id="spotDesc">Deep, fudgy chocolate that eats like pudding. The kind of chocolate you hide from your roommates.</p>
+      <div class="chips label">
+        <span class="chip">20g protein</span>
+        <span class="chip">0g added sugar</span>
+        <span class="chip">32 oz tub</span>
+      </div>
+      <div class="buy">
+        <div class="price">$7.99<small class="label">per 32 oz tub</small></div>
+        <div class="qty" aria-label="Quantity">
+          <button type="button" id="qtyDown" aria-label="Decrease quantity">−</button>
+          <output id="qty" aria-live="polite">1</output>
+          <button type="button" id="qtyUp" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="btn btn--burst" type="button" id="spotAdd">Add to cart</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="lineup dripped" id="flavors">
+  <svg class="drip" data-seed="21" viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The whole<br>lineup</h2>
+      <p>Four flavors, one rule: if it doesn't taste like dessert, it doesn't go in the tub.</p>
+    </div>
+    <div class="cards">
+      <article class="card" style="--b: #6B3A22; --d: #FFF1DC; --t: #FFF1DC">
+        <div class="card__img"><img src="images/cocoa-loco.jpg" alt="Cocoa Loco tub"></div>
+        <div class="card__body">
+          <svg class="drip" data-seed="3" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+          <h3>Cocoa Loco</h3>
+          <p class="label">Chocolate</p>
+          <div class="card__foot"><span class="card__price">$7.99</span><button class="btn btn--burst" type="button" data-add="cocoa">Add</button></div>
+        </div>
+      </article>
+      <article class="card" style="--b: #7CF0C5; --d: #3B2016; --t: #0B2A1E">
+        <div class="card__img"><img src="images/mint-condition.jpg" alt="Mint Condition tub"></div>
+        <div class="card__body">
+          <svg class="drip" data-seed="11" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+          <h3>Mint Condition</h3>
+          <p class="label">Mint chocolate chip</p>
+          <div class="card__foot"><span class="card__price">$7.99</span><button class="btn btn--burst" type="button" data-add="mint">Add</button></div>
+        </div>
+      </article>
+      <article class="card" style="--b: #F2A93B; --d: #FF5FA2; --t: #3A1F0B">
+        <div class="card__img"><img src="images/cara-meltdown.jpg" alt="Cara Meltdown tub"></div>
+        <div class="card__body">
+          <svg class="drip" data-seed="17" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+          <h3>Cara Meltdown</h3>
+          <p class="label">Salted caramel</p>
+          <div class="card__foot"><span class="card__price">$7.99</span><button class="btn btn--burst" type="button" data-add="cara">Add</button></div>
+        </div>
+      </article>
+      <article class="card" style="--b: #F4F1E8; --d: #1F1D24; --t: #1F1D24">
+        <div class="card__img"><img src="images/tough-cookie.jpg" alt="Tough Cookie tub"></div>
+        <div class="card__body">
+          <svg class="drip" data-seed="29" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+          <h3>Tough Cookie</h3>
+          <p class="label">Cookies &amp; cream</p>
+          <div class="card__foot"><span class="card__price">$7.99</span><button class="btn btn--burst" type="button" data-add="cookie">Add</button></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="macros dripped" id="macros">
+  <svg class="drip" data-seed="42" viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>20g</b><span class="label">Protein per serving</span></div>
+      <div class="stat"><b>0g</b><span class="label">Added sugar</span></div>
+      <div class="stat"><b>4</b><span class="label">Flavors, zero boring</span></div>
+    </div>
+    <div class="macros__grid">
+      <div class="facts" aria-label="Guilt facts panel">
+        <h3>Guilt Facts</h3>
+        <div class="facts__row facts__row--thick"><span>Per serving (150g)</span></div>
+        <div class="facts__row facts__row--big"><span>Protein</span><strong>20g</strong></div>
+        <div class="facts__row"><span>Added sugars</span><strong>0g</strong></div>
+        <div class="facts__row facts__row--thick"><span>Calories</span><strong>150–190</strong></div>
+        <div class="facts__row"><span>Guilt</span><strong>0%</strong></div>
+        <div class="facts__row"><span>Regret</span><strong>0%</strong></div>
+        <div class="facts__row facts__row--thick"><span>Spoon-licking</span><strong>100%</strong></div>
+        <p class="facts__note">Target macros. Final nutrition pending formulation.</p>
+      </div>
+      <div class="how">
+        <h2>How is this<br>even legal?</h2>
+        <div class="how__list">
+          <div class="how__item" style="--b: #7CF0C5; --t: #0B2A1E">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#1B1512" stroke-width="5"></circle><text x="50" y="62" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="36" fill="#1B1512">20g</text></svg>
+            <div><h3>Ultra-filtered milk</h3><p>We strain out the water and keep the protein. That's where the 20 grams come from.</p></div>
+          </div>
+          <div class="how__item" style="--b: #FF5FA2; --t: #1B1512">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="#FFFFFF" stroke="#1B1512" stroke-width="5"></circle><text x="50" y="62" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="36" fill="#1B1512">0g</text></svg>
+            <div><h3>No added sugar</h3><p>Sweetened with allulose and monk fruit, so caramel still tastes like caramel.</p></div>
+          </div>
+          <div class="how__item" style="--b: #F2A93B; --t: #3A1F0B">
+            <svg viewBox="0 0 40 72" aria-hidden="true"><ellipse cx="20" cy="20" rx="17" ry="19" fill="#1B1512"></ellipse><rect x="16" y="34" width="8" height="37" rx="4" fill="#1B1512"></rect><ellipse cx="14" cy="17" rx="2.8" ry="3.8" fill="#F2A93B"></ellipse><ellipse cx="26" cy="17" rx="2.8" ry="3.8" fill="#F2A93B"></ellipse><path d="M11 24 Q20 35 29 24 Q20 28 11 24 Z" fill="#F2A93B"></path></svg>
+            <div><h3>Real dessert flavor</h3><p>Real cocoa, snappy chocolate flakes and actual cookie crumble. Each one tastes like the dessert it's named after.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="club dripped" id="club">
+  <svg class="drip" data-seed="58" viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+  <div class="wrap club__box">
+    <div>
+      <h2>Join the<br>Loud Mouth Club</h2>
+      <p>First dibs on new flavors, restocks and the occasional unhinged email.</p>
+    </div>
+    <form class="signup" id="signup" novalidate>
+      <label class="label" for="email">Your email</label>
+      <div class="signup__row">
+        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        <button class="btn" type="submit">I'm in</button>
+      </div>
+      <p class="signup__msg" id="signupMsg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot dripped">
+  <svg class="drip" data-seed="73" viewBox="0 0 1200 96" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor"></path></svg>
+  <div class="wrap">
+    <div class="foot__cols">
+      <p class="foot__tag">Tastes like cheating.<br>Isn't.</p>
+      <div><h4 class="label">Shop</h4><ul><li><a href="#shop" data-pick="cocoa">Cocoa Loco</a></li><li><a href="#shop" data-pick="mint">Mint Condition</a></li><li><a href="#shop" data-pick="cara">Cara Meltdown</a></li><li><a href="#shop" data-pick="cookie">Tough Cookie</a></li></ul></div>
+      <div><h4 class="label">Company</h4><ul><li><a href="#top">Our story</a></li><li><a href="#top">Find a store</a></li><li><a href="#top">Wholesale</a></li><li><a href="#top">Contact</a></li></ul></div>
+      <div><h4 class="label">Follow</h4><ul><li><a href="#top">Instagram</a></li><li><a href="#top">TikTok</a></li></ul></div>
+    </div>
+    <div class="wordmark" aria-hidden="true">
+      <svg viewBox="0 0 40 72"><ellipse cx="20" cy="20" rx="17" ry="19" fill="#FFE45C"></ellipse><rect x="16" y="34" width="8" height="37" rx="4" fill="#FFE45C"></rect><ellipse cx="14" cy="17" rx="2.8" ry="3.8" fill="#1B1512"></ellipse><ellipse cx="26" cy="17" rx="2.8" ry="3.8" fill="#1B1512"></ellipse><path d="M11 24 Q20 35 29 24 Q20 28 11 24 Z" fill="#1B1512"></path></svg>
+      <span>HAPPY SPOON</span>
+    </div>
+    <div class="foot__base">
+      <span>© 2026 Happy Spoon</span>
+      <span>Concept site. Nothing here is for sale yet.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var FLAVORS = {
+    cocoa: { name: 'Cocoa<br>Loco', plain: 'Cocoa Loco', flavor: 'Chocolate protein yogurt', img: 'images/cocoa-loco.jpg', alt: 'Cocoa Loco chocolate protein yogurt tub', body: '#6B3A22', drip: '#FFF1DC', text: '#FFF1DC', desc: 'Deep, fudgy chocolate that eats like pudding. The kind of chocolate you hide from your roommates.' },
+    mint: { name: 'Mint<br>Condition', plain: 'Mint Condition', flavor: 'Mint chocolate chip protein yogurt', img: 'images/mint-condition.jpg', alt: 'Mint Condition mint chocolate chip protein yogurt tub', body: '#7CF0C5', drip: '#3B2016', text: '#0B2A1E', desc: 'Cool mint loaded with dark chocolate flakes that snap on the spoon. All of the ice cream shop, none of the brain freeze.' },
+    cara: { name: 'Cara<br>Meltdown', plain: 'Cara Meltdown', flavor: 'Salted caramel protein yogurt', img: 'images/cara-meltdown.jpg', alt: 'Cara Meltdown salted caramel protein yogurt tub', body: '#F2A93B', drip: '#FF5FA2', text: '#3A1F0B', desc: 'Buttery caramel with a pinch of sea salt, swirled thick. The flavor most likely to cause a scene.' },
+    cookie: { name: 'Tough<br>Cookie', plain: 'Tough Cookie', flavor: 'Cookies & cream protein yogurt', img: 'images/tough-cookie.jpg', alt: 'Tough Cookie cookies and cream protein yogurt tub', body: '#F4F1E8', drip: '#1F1D24', text: '#1F1D24', desc: 'Vanilla cream packed with chocolate cookie crumble. Soft on the outside, 20 grams of protein on the inside.' }
+  };
+
+  // Drip edges, generated so every section gets its own wobble.
+  function rng(seed) { var s = seed * 9973 % 2147483647 || 1; return function () { s = s * 16807 % 2147483647; return (s - 1) / 2147483646; }; }
+  function dripPath(seed, H) {
+    var r = rng(seed), band = H * 0.3, x = 1200, deep = false, d = 'M0 0H1200V' + band.toFixed(1);
+    while (x > 0) {
+      var s = deep ? 24 + r() * 22 : 60 + r() * 80;
+      var dd = deep ? H * 0.35 + r() * H * 0.55 : H * 0.06 + r() * H * 0.12;
+      s = Math.min(s, x);
+      var xb = x - s, y = Math.min(band + dd, H - 1);
+      d += ' C' + (x - s * 0.06).toFixed(1) + ' ' + band.toFixed(1) + ' ' + (x - s * 0.1).toFixed(1) + ' ' + y.toFixed(1) + ' ' + (x - s * 0.5).toFixed(1) + ' ' + y.toFixed(1) +
+           ' C' + (xb + s * 0.1).toFixed(1) + ' ' + y.toFixed(1) + ' ' + (xb + s * 0.06).toFixed(1) + ' ' + band.toFixed(1) + ' ' + xb.toFixed(1) + ' ' + band.toFixed(1);
+      x = xb;
+      deep = !deep && r() > 0.3;
+    }
+    return d + 'Z';
+  }
+  document.querySelectorAll('svg.drip').forEach(function (svg) {
+    var H = svg.viewBox.baseVal.height;
+    svg.querySelector('path').setAttribute('d', dripPath(Number(svg.dataset.seed) || 1, H));
+  });
+
+  // Flavor spotlight
+  var spot = document.getElementById('shop');
+  var current = 'cocoa';
+  function setFlavor(key) {
+    var f = FLAVORS[key]; if (!f) return;
+    current = key;
+    spot.style.setProperty('--body-c', f.body);
+    spot.style.setProperty('--drip-c', f.drip);
+    spot.style.setProperty('--text-c', f.text);
+    document.documentElement.style.setProperty('--spot-body', f.body);
+    document.getElementById('spotName').innerHTML = f.name;
+    document.getElementById('spotFlavor').textContent = f.flavor;
+    document.getElementById('spotDesc').textContent = f.desc;
+    var img = document.getElementById('spotImg'); img.src = f.img; img.alt = f.alt;
+    document.querySelectorAll('.tab').forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.pick === key)); });
+  }
+  document.querySelectorAll('.tab').forEach(function (t) { t.addEventListener('click', function () { setFlavor(t.dataset.pick); }); });
+  document.querySelectorAll('.fan__card, .foot a[data-pick]').forEach(function (el) {
+    el.addEventListener('click', function (e) { e.preventDefault(); setFlavor(el.dataset.pick); spot.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  });
+
+  // Cart (concept only)
+  var count = 0, qty = 1;
+  var qtyOut = document.getElementById('qty');
+  var toast = document.getElementById('toast'), toastTimer;
+  function say(msg) { toast.textContent = msg; toast.classList.add('is-on'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { toast.classList.remove('is-on'); }, 2600); }
+  function add(key, n) { count += n; document.getElementById('cartCount').textContent = count; say((n > 1 ? n + ' × ' : '') + FLAVORS[key].plain + ' added to cart'); }
+  document.getElementById('qtyUp').addEventListener('click', function () { qty = Math.min(qty + 1, 12); qtyOut.textContent = qty; });
+  document.getElementById('qtyDown').addEventListener('click', function () { qty = Math.max(qty - 1, 1); qtyOut.textContent = qty; });
+  document.getElementById('spotAdd').addEventListener('click', function () { add(current, qty); });
+  document.querySelectorAll('[data-add]').forEach(function (b) { b.addEventListener('click', function () { add(b.dataset.add, 1); }); });
+  document.getElementById('cartBtn').addEventListener('click', function () { say(count ? 'Checkout isn’t live yet. This is a concept site.' : 'Your cart is empty. Go pick a flavor.'); });
+
+  // Club signup (concept only)
+  document.getElementById('signup').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var input = document.getElementById('email'), msg = document.getElementById('signupMsg');
+    if (!input.value || !input.checkValidity()) { msg.textContent = 'Enter an email address like you@example.com.'; input.focus(); return; }
+    msg.textContent = 'You’re in. (Concept demo, so no email was sent.)';
+    input.value = '';
+  });
+})();
+</script>
+</body>
+</html>
