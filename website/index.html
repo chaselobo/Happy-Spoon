@@ -190,8 +190,8 @@ p { margin: 0; }
 .foot__base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 28px; padding-top: 18px; border-top: 2px solid rgba(255, 241, 220, .25); font-size: 13px; font-weight: 600; }
 
 /* ---------- toast ---------- */
-.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 50; max-width: calc(100% - 32px); padding: 12px 20px; border: 3px solid var(--ink); border-radius: 999px; background: var(--sun); color: var(--ink); font-weight: 800; box-shadow: var(--shadow); transform: translate(-50%, 160%); transition: transform .3s cubic-bezier(.3,1.5,.5,1); }
-.toast.is-on { transform: translate(-50%, 0); }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 50; max-width: calc(100% - 32px); padding: 12px 20px; border: 3px solid var(--ink); border-radius: 999px; background: var(--sun); color: var(--ink); font-weight: 800; box-shadow: var(--shadow); transform: translate(-50%, 30px); opacity: 0; visibility: hidden; pointer-events: none; transition: transform .3s cubic-bezier(.3,1.5,.5,1), opacity .2s, visibility 0s .3s; }
+.toast.is-on { transform: translate(-50%, 0); opacity: 1; visibility: visible; transition: transform .3s cubic-bezier(.3,1.5,.5,1), opacity .2s, visibility 0s; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 1020px) {
